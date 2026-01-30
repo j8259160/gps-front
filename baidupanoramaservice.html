@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>loading...</title>
+    <link rel=icon href=/v3/favicon.ico>
+    <style type="text/css">
+        body,
+        html,
+        #container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=3.0&ak=qzW0I63LF0cWxqxCSotbSqPY"></script>
+    <script type="text/javascript">
+        var mp = null;
+        var lon = getQueryString('lon');
+        var lat = getQueryString('lat');
+        var deviceName = getQueryString('devicename');
+        var point = new BMap.Point(Number(lon), Number(lat));
+        var isZh = (localStorage.getItem("PATH_LANG") || 'zh') === 'zh';
+        document.title = isZh ? deviceName + ' | 街景' : deviceName + ' | Streetscape';
+
+        initMap();
+
+        showPanorama();
+
+
+        function initMap() {
+            mp = new BMap.Map("container");
+            var marker = new BMap.Marker(point);
+            mp.centerAndZoom(point, 16);
+            mp.enableScrollWheelZoom();
+            mp.addOverlay(marker);
+        }
+
+        function showPanorama() {
+            var panoramaService = new BMap.PanoramaService();
+            panoramaService.getPanoramaByLocation(point, function(data) {
+                if (data == null) {
+                    alert("该位置暂时没有街景");
+                    return;
+                }
+                var myData = data;
+                var panorama = mp.getPanorama(); //获取实例对象
+                panorama.setId(myData.id); //全景ID
+                panorama.show(); //显示全景
+            });
+        }
+
+        function getQueryString(name) {
+            var resulturl = null;
+            var allurl = location.search;
+            var theRequest = new Object();
+            if (allurl.indexOf('?') != -1) {
+                var str = allurl.substr(1)
+                var strs = str.split('&')
+                for (var i = 0; i < strs.length; i++) {
+                    var value = strs[i].split('=')[1];
+                    theRequest[strs[i].split('=')[0]] = value;
+                }
+            }
+            resulturl = theRequest[name];
+            resulturl = decodeURIComponent(resulturl);
+            return resulturl;
+        }
+    </script>
+</body>
+
+</html>
