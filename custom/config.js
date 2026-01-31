@@ -24,25 +24,16 @@ var hostDomain = 'gps51.com';
 // var hostDomain = 'appserver1.gps51.com';
 // var hostDomain = "web.bjyunche.com";
 if (location.hostname.indexOf('127.0.0.1') != -1 || location.hostname.indexOf('localhost') != -1 || location.host.indexOf('192.168.1') != -1) {
-    // if (location.hostname.indexOf('127.0.0.1') != -1 || location.host.indexOf('192.168.1') != -1) {
     viewhosts = viewhost;
-    if (location.pathname.indexOf('gpsserver') != -1 || location.host.indexOf('192.168.1') != -1 || true) {
-        apihost = 'https://supergps-backend.onrender.com/';
-        apihosts = 'https://supergps-backend.onrender.com/';
-        wsHost = 'ws://localhost:90/wss';
-    }
+    apihost = 'https://supergps-backend.onrender.com/';
+    apihosts = 'https://supergps-backend.onrender.com/';
+    wsHost = 'ws://localhost:90/wss';
 } else {
-    if (ishttps == true) {
-        viewhosts = 'https://' + location.host + path + '/';
-        apihost = 'https://' + hostDomain + ':443/';
-        apihosts = 'https://' + hostDomain + ':443/';
-        wsHost = 'wss://' + hostDomain + '/wss';
-    } else {
-        viewhosts = 'http://' + location.host + path + '/';
-        apihost = 'http://' + hostDomain + '/';
-        apihosts = 'https://' + hostDomain + '/';
-        wsHost = 'ws://' + hostDomain + '/wss';
-    }
+    // For production (Render or any other domain), use the supergps-backend API
+    viewhosts = location.protocol + '//' + location.host + path + '/';
+    apihost = 'https://supergps-backend.onrender.com/';
+    apihosts = 'https://supergps-backend.onrender.com/';
+    wsHost = 'wss://supergps-backend.onrender.com/wss';
 }
 
 window.viewhosts = viewhosts;
